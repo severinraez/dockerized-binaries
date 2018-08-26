@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+IMAGE_PREFIX="dockerized-binaries"
+
+docker images | grep $IMAGE_PREFIX

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -e
+
+cd $(dirname $0)
+root=$(pwd)
+
+IMAGE_PREFIX="dockerized-binaries"
+
+indent2 () {
+    sed 's/^/  /'
+}
+
+build_image() {
+    image="$1"
+    image_name="$IMAGE_PREFIX/$image"
+
+    printf "Building $image_name\n\n"
+
+    cd "images/$image"
+
+    if [[ ! -f "Dockerfile" ]]; then
+        echo "No $image/Dockerfile found at $(pwd)"
+        exit 2
+    fi
+
+    docker build . -t "$IMAGE_PREFIX/$image" | indent2
+
+    cd "$root"
+    echo
+}
+
+images=$(ls images/)
+
+for image in $images; do
+    build_image "$image"
+done
+
+echo "Done."
